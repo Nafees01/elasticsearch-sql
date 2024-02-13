@@ -2,26 +2,26 @@ name: placeholder_Name
 
 on:
   pull_request:
-    branches: branch-name
+    branches: 
+      - branch-name
   push:
     branches:
-    - branch-1
+      - branch-1
 
 jobs:
   build:
-    strategy:
-      matrix: java
-  - name: Placeholder
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        java-version: ['1.8'] # Define the Java versions as a list
     steps:
-      with: key
+    - name: Checkout repository
+      uses: actions/checkout@v2 
+    - name: Set up JDK
+      uses: actions/setup-java@v2 
       with:
-        java-version: 1.8
-      with: java-version
-    - name: placeholder_Name
-      uses: actions/checkout@version
-      with:
-        java-version: ${{ matrix.java }}
-      uses: actions/setup-java@version
+        java-version: ${{ matrix.java-version }} # Correctly reference the matrix variable
+        distribution: 'temurin' 
+        cache: maven 
+    - name: Install dependencies
       run: mvn install -DskipTests=true -Dmaven.javadoc.skip=true -Dgpg.skip=true
-

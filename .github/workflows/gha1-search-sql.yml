@@ -13,15 +13,20 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        java-version: ['1.8'] # Define the Java versions as a list
+        java-version: ['8'] # Corrected Java version
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2 
+      uses: actions/checkout@v2
+
     - name: Set up JDK
-      uses: actions/setup-java@v2 
+      uses: actions/setup-java@v2
       with:
-        java-version: ${{ matrix.java-version }} # Correctly reference the matrix variable
-        distribution: 'temurin' 
-        cache: maven 
+        java-version: ${{ matrix.java-version }}
+        distribution: 'temurin' # Using Temurin as an example; adjust as needed
+        cache: maven
+
     - name: Install dependencies
       run: mvn install -DskipTests=true -Dmaven.javadoc.skip=true -Dgpg.skip=true
+
+    - name: Run tests
+      run: mvn test

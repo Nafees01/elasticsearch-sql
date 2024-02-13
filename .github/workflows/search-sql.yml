@@ -2,12 +2,14 @@ name: Java CI with Elasticsearch
 
 on:
   push:
-    branches: [master]
+    branches:
+      - 'master'
   pull_request:
-    branches: [master]
+    branches:
+      - 'master'
 
 jobs:
-  build:
+  build-and-test:
     runs-on: ubuntu-latest
 
     services:
@@ -45,6 +47,12 @@ jobs:
       run: mvn install -DskipTests=true -Dmaven.javadoc.skip=true -Dgpg.skip=true
 
     - name: Run tests
-      run: |
-        ulimit -a
-        mvn test
+      run: mvn test
+    
+    - name: Upload test reports
+      if: failure()
+      uses: actions/upload-artifact@v2
+      with:
+        name: surefire-reports
+        path: target/surefire-reports
+
